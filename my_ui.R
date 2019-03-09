@@ -25,22 +25,13 @@ changes in history along with criminal rates."),
     ),
     
     mainPanel(
-<<<<<<< HEAD
-      tabsetPanel(
-        type = "tabs",
-        
-        tabPanel("Plot",  textOutput(outputId = "text2"),
-                 plotOutput(outputId = "plot"))
-      )
-    )
-    )
-=======
+
       tablepanel(type = "tabs",
                 tablepanel("plot", plotOutput("plot")),
                 tablepanel("dataTable", dataTableOutput("vio_table"))
       )
     )
->>>>>>> cbe7fc49b7d9bac7ade0447ace311b072bdbf275
+
     
   )
 )

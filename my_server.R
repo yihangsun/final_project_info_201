@@ -13,9 +13,14 @@ filtered_wa <- select(wa_crime_report, year, county, SRS_TOTAL)
 wa_county_map <- filter(county_map, region == "washington")
 
 ny_crime_report$County <- tolower(ny_crime_report$County)
-filtered_ny <- select(ny_crime_report, Year, County, SRS_TOTAL)
+filtered_ny <- select(ny_crime_report, Year, County, Violent.Rate)
+
 wa_county_map <- filter(county_map, region == "washington")
+ny_county_map <- filter(county_map, region == "new york")
+
 joined_wa <- left_join(filtered_wa, wa_county_map, by = c("county" = "subregion"))
+joined_ny <- left_join(filtered_ny, ny_county_map, by = c("County" = "subregion"))
+
 
 wa_crime_df <- wa_crime_report %>%
   filter(year == c(1990:2016)) %>%
@@ -60,6 +65,11 @@ my_server <- function(input, output) {
     })
     
     output$plot <- renderPlot({
+    dataset <- input$dataset
+    if (dataset == "New York") {
+      selected_data <- joined_ny
+    }
+    
     ggplot(data = joined_wa) +
       geom_polygon(aes(x = long, y = lat, group = group, fill = SRS_TOTAL)) +
       coord_quickmap() +
