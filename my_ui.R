@@ -27,7 +27,8 @@ changes in history along with criminal rates."),
     mainPanel(
       tablepanel(type = "tabs",
                 tablepanel("plot", plotOutput("plot")),
-                tablepanel("dataTable", dataTableOutput("vio_table"))
+                tablepanel("dataTable", dataTableOutput("vio_table"),
+                tablepanel("dataTable", dataTableOutput("pro_table"))
       )
     )
     
