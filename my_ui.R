@@ -10,6 +10,22 @@ can represent most for East and West in United States. There are a lot of
 important changes happened in past threee decades. We will explore those 
 changes in history along with criminal rates."),
   wa_crime_df <- wa_crime_report %>%
-    filter(year ==c(1990:2016))
+    filter(year ==c(1990:2016)),
+  
+  sidebarLayout(
+    
+    sidebarPanel(
+      selectInput("dataset", "Choose the state you want to search:",
+                  choices = c("New York", "Washington")),
+      
+      radioButtons(inputId = "year", label = "choose the time period you want to search:",
+                   choices = list("1990's" = 1990, 
+                                  "2000's" = 2000, 
+                                  "2010's" = 2010), 
+                   selected = "1990's")
+      
+    ),
+    
+    mainPanel()
     
 )
