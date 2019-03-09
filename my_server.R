@@ -38,7 +38,7 @@ ny_crime_df <- ny_crime_report %>%
   summarize(ny_ave_violent = mean(Violent.Rate / 10),
             ny_ave_property = mean(Property.Rate / 100))
 wa_ny_crime_df <- left_join(ny_crime_df, wa_crime_df, by = c("Year" = "year"))
-
+View(wa_ny_crime_df)
 
 my_server <- function(input, output) {
   
@@ -53,6 +53,28 @@ my_server <- function(input, output) {
       } else if(input$dataset == "Both") {
         filter_vio_both <- filtered_table %>%
           select(Year, wa_ave_violent, ny_ave_violent)
+      }
+      if(input$year == "2010's") {
+        filtered_table <- filtered_table %>%
+          filter(Year == c(input$year : 2016))
+      } else{
+        filtered_table <- filtered_table %>%
+          filter(Year == c(input$year : (input$year + 9)))
+      }
+      filtered_table
+    })
+    
+    output$pro_table <- renderDataTable({
+      filtered_table <- wa_ny_crime_df
+      if(input$dataset == "New York") {
+        filtered_pro_ny <- filtered_table %>% 
+          select(Year, ny_ave_proporty)
+      } else if(input$dataset == "Washington") {
+        filter_pro_wa <- filtered_table %>%
+          select(Year, wa_ave_proporty)
+      } else if(input$dataset == "Both") {
+        filter_pro_both <- filtered_table %>%
+          select(Year, wa_ave_proporty, ny_ave_proporty)
       }
       if(input$year == "2010's") {
         filtered_table <- filtered_table %>%
