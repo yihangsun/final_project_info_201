@@ -9,14 +9,12 @@ my_ui <- fluidPage(
 can represent most for East and West in United States. There are a lot of 
 important changes happened in past threee decades. We will explore those 
 changes in history along with criminal rates."),
-  wa_crime_df <- wa_crime_report %>%
-    filter(year ==c(1990:2016)),
   
   sidebarLayout(
     
     sidebarPanel(
       selectInput("dataset", "Choose the state you want to search:",
-                  choices = c("New York", "Washington")),
+                  choices = c("New York", "Washington", "Both")),
       
       radioButtons(inputId = "year", label = "choose the time period you want to search:",
                    choices = list("1990's" = 1990, 
@@ -26,6 +24,12 @@ changes in history along with criminal rates."),
       
     ),
     
-    mainPanel()
+    mainPanel(
+      tablepanel(type = "tabs",
+                tablepanel("plot", plotOutput("plot")),
+                tablepanel("dataTable", dataTableOutput("vio_table"))
+      )
+    )
     
+  )
 )
