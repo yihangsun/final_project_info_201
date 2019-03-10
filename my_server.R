@@ -43,6 +43,19 @@ ny_crime_df <- ny_crime_report %>%
 wa_ny_crime_df <- left_join(ny_crime_df, wa_crime_df, by = c("Year" = "year"))
 View(wa_ny_crime_df)
 
+selected_data_wa <- wa_crime_report %>%
+  filter(county == "spokane" | county == "king" |
+           county == "walla walla" | county == "pierce" |
+           county == "clark" | county == "benton" |
+           county == "snohomish" | county == "cowlitz")
+
+selected_data_ny <- ny_crime_report  %>%
+  filter(County == "chautauqua" | County == "erie" |
+           County == "niagara" | County == "new york" |
+           County == "kings" | County == "queens" |
+           County == "bronx" | County == "hamilton" |
+           County == "orange")
+
 my_server <- function(input, output) {
   
     output$vio_table <- renderDataTable({
@@ -104,6 +117,112 @@ my_server <- function(input, output) {
       scale_fill_gradient(limits = range(selected_data[3]),
                           low = "pink", high = "red")
     })
+    
+    
+    
+    output$demo_map <- renderPlot({
+      dataset <- input$dataset
+      if (dataset == "New York") {
+        selected_data <- selected_data_ny %>%
+          select(Year, County, Population) %>%
+          filter(Year == 1990 | Year == 1999 |
+                   Year == 2000 | Year == 2009 |
+                   Year == 2010 | Year == 2016) 
+        selected_data <- mutate(
+          selected_data,
+          percentage = 0
+        )
+        for(i in 54:10)
+          selected_data$percentage[i] =  
+          (selected_data$Population[i - 9] -  selected_data$Population[i]) / 
+          selected_data$Population[i] * 100
+        selected_data <- selected_data %>%
+          filter(Year == input$year) 
+        names(selected_data)[2] <- "subregion"
+        
+        selected_data <- left_join(selected_data, ny_county_map, by = "subregion")
+        county_map <- ny_county_map
+      }
+       
+      
+        
+        if (dataset == "Washington") {
+        selected_data <- selected_data_wa %>%
+          select(year, county, POP_TOTAL) %>%
+         filter(year == 1990 | year == 1999 |
+                year == 2000 | year == 2009 |
+                year == 2010 | year == 2016)
+        
+        selected_data <- mutate(
+          selected_data,
+          percentage = 0
+        )
+         for(i in 1:47)
+          selected_data$percentage[i] =  
+  (selected_data$POP_TOTAL[i + 1] -  selected_data$POP_TOTAL[i]) / 
+                                  selected_data$POP_TOTAL[i] * 100
+        
+        selected_data <- selected_data %>%
+          filter(year == input$year) 
+        names(selected_data)[2] <- "subregion"
+  selected_data <- left_join(selected_data, wa_county_map, by = "subregion")
+  county_map <- wa_county_map
+      }
+      
+      
+      ggplot(selected_data, aes(x = long, y = lat, group = group, fill = percentage)) +
+        geom_polygon() +
+        scale_fill_gradient(limits = range(selected_data$percentage), 
+                            low = "pink", high = "red") +
+        ggtitle("") +
+        theme(axis.title.x = element_blank(),
+              axis.text.x = element_blank(),
+              axis.ticks.x = element_blank()) +
+        theme(axis.title.y = element_blank(),
+              axis.text.y = element_blank(),
+              axis.ticks.y = element_blank()) +
+        geom_polygon(data = county_map, aes(x=long, y = lat, group = group), fill = NA, color = "grey") +
+        coord_fixed(1.3)
+      
+      
+    })
+    
+    
+    output$demo_cor <- renderPlot({
+      if(input$year == 1990){
+        start <- 1990
+        end <- 1999
+      }
+      if(input$year == 2000){
+        start <- 2000
+        end <- 2009
+      }
+      if(input$year == 2010){
+        start <- 2010
+        end <- 2016
+      }
+      dataset <- input$dataset
+      if (dataset == "Washington") {
+        selected_data <- selected_data_wa %>%
+          select(year, county, POP_TOTAL, SRS_TOTAL) %>%
+          filter(year <= end & year >= start)
+        names(selected_data)[4] <- "Crime_Count"
+        names(selected_data)[3] <- "Population"
+        ggplot(selected_data, aes(x=Population, y=Crime_Count, color = county, na.rm = TRUE)) + 
+          geom_point() 
+      }
+      else if (dataset == "New York") {
+        selected_data <- selected_data_ny  %>%
+          select(Year, County, Population, Index.Count) %>%
+          filter(Year <= end & Year >= start)
+        names(selected_data)[4] <- "Crime_Count"
+        ggplot(selected_data, aes(x=Population, y=Crime_Count, color = County, na.rm = TRUE)) + 
+          geom_point() 
+      }
+      
+    })
+      
+    
 }
 
 

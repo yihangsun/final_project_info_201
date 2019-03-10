@@ -7,7 +7,7 @@ wa_crime_report <- read.csv("Criminal_Justice_Data_Book.csv")
 ny_crime_report <- read.csv("Index__Violent__Property__and_Firearm_Rates_By_County__Beginning_1990.csv")
 
 my_ui <- fluidPage( 
-  titlePanel("Eastern and Western Crime Rate"),
+  titlePanel("Eastern and Western Criminal Behavior Comparsion"),
   h1("The crime rate of representive state in Eastern and Western States of 
      U.S.A in past three decades"),
   p("We are focusing on researching Washington State and New York State which  
@@ -18,7 +18,7 @@ changes in history along with criminal rates."),
   sidebarLayout(
     
     sidebarPanel(
-      selectInput('dataset', 'Choose the state you want to search:',
+      selectInput(inputId = "dataset", label = "Choose the area(s) you want to search:",
                   choices = c("New York", "Washington", "Both")),
       
       radioButtons(inputId = "year", label = "choose the time period you want to search:",
@@ -27,18 +27,18 @@ changes in history along with criminal rates."),
                                   "2010's" = 2010), 
                    selected = 1990)
       
-    ),
+                ),
     
     mainPanel(
 
       tabsetPanel(type = "tabs",
                 tabPanel("plot", plotOutput("plot")),
-                tabPanel("dataTable", dataTableOutput("vio_table"),
-                tabPanel("dataTable", dataTableOutput("pro_table"))
-      )
-    )
+                tabPanel("dataTable", dataTableOutput("vio_table")),
+                tabPanel("dataTable", dataTableOutput("pro_table")),
+                tabPanel("Demographic",imageOutput("demo_map"), plotOutput("demo_cor"))
+              )
+            )
+          )
+        )
 
-    
-  )
-)
-)
+
