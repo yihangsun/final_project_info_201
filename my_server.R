@@ -2,6 +2,7 @@ library("dplyr")
 library("ggplot2")
 library("maps")
 library("shiny")
+library("tidyr")
 
 county_map <- map_data("county")
 
@@ -15,6 +16,7 @@ wa_county_map <- filter(county_map, region == "washington")
 
 ny_crime_report$County <- tolower(ny_crime_report$County)
 filtered_ny <- select(ny_crime_report, Year, County, Violent.Rate)
+colnames(filtered_ny)[1] <- "year"
 
 wa_county_map <- filter(county_map, region == "washington")
 ny_county_map <- filter(county_map, region == "new york")
@@ -89,15 +91,15 @@ my_server <- function(input, output) {
     
     output$plot <- renderPlot({
     dataset <- input$dataset
-    year <- input$year
+    year <- as.numeric(input$year)
     if (dataset == "New York") {
       selected_data <- joined_ny
-    } else if (dataset == "Washington") {
+    } else if (dataset == "Washington" | dataset == "Both") {
       selected_data <- joined_wa
     }
-    
+    selected_data <- selected_data[selected_data$year > year & selected_data < (year + 10),]
     ggplot(data = selected_data) +
-      geom_polygon(aes(x = long, y = lat, group = group, fill = selected_data[3])) +
+      geom_polygon(aes(x = long, y = lat, group = group, fill = selected_data[,3])) +
       coord_quickmap() +
       scale_fill_gradient(limits = range(selected_data[3]),
                           low = "pink", high = "red")

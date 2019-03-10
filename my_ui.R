@@ -1,3 +1,6 @@
+library("dplyr")
+library("ggplot2")
+library("maps")
 library("shiny")
 
 wa_crime_report <- read.csv("Criminal_Justice_Data_Book.csv")
@@ -15,7 +18,7 @@ changes in history along with criminal rates."),
   sidebarLayout(
     
     sidebarPanel(
-      selectInput("dataset", "Choose the state you want to search:",
+      selectInput('dataset', 'Choose the state you want to search:',
                   choices = c("New York", "Washington", "Both")),
       
       radioButtons(inputId = "year", label = "choose the time period you want to search:",
