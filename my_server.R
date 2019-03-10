@@ -69,6 +69,9 @@ coors_ny <- data.frame(
   longc = c(-78.878738, -73.935242, -73.756233),
   stringsAsFactors = FALSE
 )
+
+
+
 my_server <- function(input, output) {
   
     output$vio_table <- renderDataTable({
@@ -298,6 +301,7 @@ my_server <- function(input, output) {
         names(selected_data)[4] <- "Crime_Count"
         names(selected_data)[3] <- "Population"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, color = county, na.rm = TRUE)) + 
+          geom_smooth(method = 'lm', se=FALSE) +
           geom_point() 
       }
       else if (dataset == "New York") {
@@ -306,6 +310,7 @@ my_server <- function(input, output) {
           filter(Year <= end & Year >= start)
         names(selected_data)[4] <- "Crime_Count"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, color = County, na.rm = TRUE)) + 
+          geom_smooth(method = 'lm', se=FALSE) +
           geom_point() 
       }
       
@@ -321,6 +326,7 @@ my_server <- function(input, output) {
         names(selected_data)[4] <- "Crime_Count"
         names(selected_data)[3] <- "Population"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, na.rm = TRUE)) + 
+          geom_smooth(method = 'lm', se=FALSE) +
           geom_point() 
       }
       else if (dataset == "New York") {
@@ -329,6 +335,7 @@ my_server <- function(input, output) {
           filter(County == "new york")
         names(selected_data)[4] <- "Crime_Count"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, na.rm = TRUE)) + 
+          geom_smooth(method = 'lm', se=FALSE) +
           geom_point() 
       }
       
@@ -359,7 +366,7 @@ my_server <- function(input, output) {
     
     output$text <- renderText({
       if(input$dataset == "Washington")
-       a <- "hi"
+       a <- "hi *hi"
     })
     
     
