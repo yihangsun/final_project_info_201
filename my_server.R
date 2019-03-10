@@ -56,6 +56,19 @@ selected_data_ny <- ny_crime_report  %>%
            County == "bronx" | County == "hamilton" |
            County == "orange")
 
+coors_wa <- data.frame(
+  cities = c("Seattle", "Spokane", "Walla walla", "Tacoma"),
+  latc = c(47.608013, 47.658779, 46.055645, 47.258728),
+  longc = c(-122.335167, -117.426048, -118.346359, -122.465973),
+  stringsAsFactors = FALSE
+)
+
+coors_ny <- data.frame(
+  cities = c("Buffalo", "New York", "Albany"),
+  latc = c(42.880230, 40.730610, 42.652580),
+  longc = c(-78.878738, -73.935242, -73.756233),
+  stringsAsFactors = FALSE
+)
 my_server <- function(input, output) {
   
     output$vio_table <- renderDataTable({
@@ -142,6 +155,7 @@ my_server <- function(input, output) {
         
         selected_data <- left_join(selected_data, ny_county_map, by = "subregion")
         county_map <- ny_county_map
+        coors <- coors_ny
       }
        
       
@@ -167,6 +181,7 @@ my_server <- function(input, output) {
         names(selected_data)[2] <- "subregion"
   selected_data <- left_join(selected_data, wa_county_map, by = "subregion")
   county_map <- wa_county_map
+  coors <- coors_wa
       }
       
       
@@ -182,7 +197,10 @@ my_server <- function(input, output) {
               axis.text.y = element_blank(),
               axis.ticks.y = element_blank()) +
         geom_polygon(data = county_map, aes(x=long, y = lat, group = group), fill = NA, color = "grey") +
-        coord_fixed(1.3)
+        coord_fixed(1.3)  +
+        geom_point(data = coors, aes(x=longc, y=latc,group = NULL, fill = NULL), color="black", size=2) +
+        geom_text(data = coors, aes(x = longc +0.35, y = latc+0.15, label = cities, group = NULL, fill = NULL), 
+                  size = 3.9, col = "black", fontface = "italic") 
       
       
     })
@@ -208,6 +226,7 @@ my_server <- function(input, output) {
         names(selected_data)[2] <- "subregion"
         selected_data <- left_join(selected_data, ny_county_map, by = "subregion")
         county_map <- ny_county_map
+        coors <- coors_ny
       }
       
       
@@ -233,9 +252,10 @@ my_server <- function(input, output) {
         names(selected_data)[2] <- "subregion"
         selected_data <- left_join(selected_data, wa_county_map, by = "subregion")
         county_map <- wa_county_map
+        coors <- coors_wa
       }
       
-      
+    
       ggplot(selected_data, aes(x = long, y = lat, group = group, fill = percentage)) +
         geom_polygon() +
         scale_fill_gradient(limits = range(selected_data$percentage), 
@@ -248,7 +268,11 @@ my_server <- function(input, output) {
               axis.text.y = element_blank(),
               axis.ticks.y = element_blank()) +
         geom_polygon(data = county_map, aes(x=long, y = lat, group = group), fill = NA, color = "grey") +
-        coord_fixed(1.3)
+        coord_fixed(1.3) +
+        geom_point(data = coors, aes(x=longc, y=latc,group = NULL, fill = NULL), color="black", size=2) +
+        geom_text(data = coors, aes(x = longc +0.35, y = latc+0.15, label = cities, group = NULL, fill = NULL), 
+                  size = 3.9, col = "black", fontface = "italic") 
+    
       
       
     })
@@ -332,6 +356,12 @@ my_server <- function(input, output) {
       }
       
     })
+    
+    output$text <- renderText({
+      if(input$dataset == "Washington")
+       a <- "hi"
+    })
+    
     
 }
 
