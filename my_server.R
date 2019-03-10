@@ -286,7 +286,52 @@ my_server <- function(input, output) {
       }
       
     })
+    
+    
+    output$demo_cor1 <- renderPlot({
+      dataset <- input$dataset
+      if (dataset == "Washington") {
+        selected_data <- selected_data_wa %>%
+          select(year, county, POP_TOTAL, SRS_TOTAL) %>%
+          filter(county == "king")
+        names(selected_data)[4] <- "Crime_Count"
+        names(selected_data)[3] <- "Population"
+        ggplot(selected_data, aes(x=Population, y=Crime_Count, na.rm = TRUE)) + 
+          geom_point() 
+      }
+      else if (dataset == "New York") {
+        selected_data <- selected_data_ny  %>%
+          select(Year, County, Population, Index.Count) %>%
+          filter(County == "new york")
+        names(selected_data)[4] <- "Crime_Count"
+        ggplot(selected_data, aes(x=Population, y=Crime_Count, na.rm = TRUE)) + 
+          geom_point() 
+      }
       
+    })
+      
+    
+    output$demo_cor2 <- renderPlot({
+      dataset <- input$dataset
+      if (dataset == "Washington") {
+        selected_data <- selected_data_wa %>%
+          select(year, county, POP_TOTAL, SRS_TOTAL) %>%
+          filter(county == "benton")
+        names(selected_data)[4] <- "Crime_Count"
+        names(selected_data)[3] <- "Population"
+        ggplot(selected_data, aes(x=Population, y=Crime_Count, na.rm = TRUE)) + 
+          geom_point() 
+      }
+      else if (dataset == "New York") {
+        selected_data <- selected_data_ny  %>%
+          select(Year, County, Population, Index.Count) %>%
+          filter(County == "hamilton")
+        names(selected_data)[4] <- "Crime_Count"
+        ggplot(selected_data, aes(x=Population, y=Crime_Count, na.rm = TRUE)) + 
+          geom_point() 
+      }
+      
+    })
     
 }
 
