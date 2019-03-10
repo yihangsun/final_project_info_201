@@ -35,7 +35,8 @@ changes in history along with criminal rates."),
                 tabPanel("plot", plotOutput("plot")),
                 tabPanel("dataTable", dataTableOutput("vio_table")),
                 tabPanel("dataTable", dataTableOutput("pro_table")),
-                tabPanel("Demographic",imageOutput("demo_map"), plotOutput("demo_cor"))
+                tabPanel("Demographic",imageOutput("demo_map"), imageOutput("demo_map1"),
+                         plotOutput("demo_cor"))
               )
             )
           )

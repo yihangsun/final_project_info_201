@@ -174,7 +174,7 @@ my_server <- function(input, output) {
         geom_polygon() +
         scale_fill_gradient(limits = range(selected_data$percentage), 
                             low = "pink", high = "red") +
-        ggtitle("") +
+        ggtitle("population") +
         theme(axis.title.x = element_blank(),
               axis.text.x = element_blank(),
               axis.ticks.x = element_blank()) +
@@ -187,6 +187,71 @@ my_server <- function(input, output) {
       
     })
     
+    output$demo_map1 <- renderPlot({
+      dataset <- input$dataset
+      if (dataset == "New York") {
+        selected_data <- selected_data_ny %>%
+          select(Year, County, Index.Count) %>%
+          filter(Year == 1990 | Year == 1999 |
+                   Year == 2000 | Year == 2009 |
+                   Year == 2010 | Year == 2016) 
+        selected_data <- mutate(
+          selected_data,
+          percentage = 0
+        )
+        for(i in 54:10)
+          selected_data$percentage[i] =  
+          (selected_data$Index.Count[i - 9] -  selected_data$Index.Count[i]) / 
+          selected_data$Index.Count[i] * 100
+        selected_data <- selected_data %>%
+          filter(Year == input$year) 
+        names(selected_data)[2] <- "subregion"
+        selected_data <- left_join(selected_data, ny_county_map, by = "subregion")
+        county_map <- ny_county_map
+      }
+      
+      
+      
+      if (dataset == "Washington") {
+        selected_data <- selected_data_wa %>%
+          select(year, county, SRS_TOTAL) %>%
+          filter(year == 1990 | year == 1999 |
+                   year == 2000 | year == 2009 |
+                   year == 2010 | year == 2016)
+        
+        selected_data <- mutate(
+          selected_data,
+          percentage = 0
+        )
+        for(i in 1:47)
+          selected_data$percentage[i] =  
+          (selected_data$SRS_TOTAL[i + 1] -  selected_data$SRS_TOTAL[i]) / 
+          selected_data$SRS_TOTAL[i] * 100
+        
+        selected_data <- selected_data %>%
+          filter(year == input$year) 
+        names(selected_data)[2] <- "subregion"
+        selected_data <- left_join(selected_data, wa_county_map, by = "subregion")
+        county_map <- wa_county_map
+      }
+      
+      
+      ggplot(selected_data, aes(x = long, y = lat, group = group, fill = percentage)) +
+        geom_polygon() +
+        scale_fill_gradient(limits = range(selected_data$percentage), 
+                            low = "pink", high = "red") +
+        ggtitle("crime") +
+        theme(axis.title.x = element_blank(),
+              axis.text.x = element_blank(),
+              axis.ticks.x = element_blank()) +
+        theme(axis.title.y = element_blank(),
+              axis.text.y = element_blank(),
+              axis.ticks.y = element_blank()) +
+        geom_polygon(data = county_map, aes(x=long, y = lat, group = group), fill = NA, color = "grey") +
+        coord_fixed(1.3)
+      
+      
+    })
     
     output$demo_cor <- renderPlot({
       if(input$year == 1990){
