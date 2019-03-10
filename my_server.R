@@ -1,6 +1,7 @@
 library("dplyr")
 library("ggplot2")
 library("maps")
+library("shiny")
 
 county_map <- map_data("county")
 
@@ -21,7 +22,7 @@ ny_county_map <- filter(county_map, region == "new york")
 joined_wa <- left_join(filtered_wa, wa_county_map, by = c("county" = "subregion"))
 joined_ny <- left_join(filtered_ny, ny_county_map, by = c("County" = "subregion"))
 
-
+View(joined_wa_ny)
 wa_crime_df <- wa_crime_report %>%
   filter(year == c(1990:2016)) %>%
   select(year, SRS_AG_ASSLT, SRS_ARSON, SRS_BURGLARY, SRS_MURDER, SRS_MVT, 
@@ -42,7 +43,7 @@ View(wa_ny_crime_df)
 
 my_server <- function(input, output) {
   
-    ouput$vio_table <- renderDataTable({
+    output$vio_table <- renderDataTable({
       filtered_table <- wa_ny_crime_df
       if(input$dataset == "New York") {
         filtered_vio_ny <- filtered_table %>% 
@@ -88,14 +89,17 @@ my_server <- function(input, output) {
     
     output$plot <- renderPlot({
     dataset <- input$dataset
+    year <- input$year
     if (dataset == "New York") {
       selected_data <- joined_ny
+    } else if (dataset == "Washington") {
+      selected_data <- joined_wa
     }
     
-    ggplot(data = joined_wa) +
-      geom_polygon(aes(x = long, y = lat, group = group, fill = SRS_TOTAL)) +
+    ggplot(data = selected_data) +
+      geom_polygon(aes(x = long, y = lat, group = group, fill = selected_data[3])) +
       coord_quickmap() +
-      scale_fill_gradient(limits = range(joined_wa$SRS_TOTAL),
+      scale_fill_gradient(limits = range(selected_data[3]),
                           low = "pink", high = "red")
     })
 }
