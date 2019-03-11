@@ -134,6 +134,31 @@ my_server <- function(input, output) {
                           low = "pink", high = "red")
     })
     
+    output$text1 <- renderText({
+      dataset <- input$dataset
+      year <- input$year
+      if (dataset == "New York") {
+        selected_data <- "New York"
+        msg <- paste0("The map above shows the distribution of crime rate in ",
+                      selected_data, " in the ", year, "'s. We can see that
+                      crime rates are almost the same in New york. Based on the
+                      legend on the right, crime is diminshing over the decades.")
+      } else if (dataset == "Washington") {
+        selected_data <- "Washington"
+        msg <- paste0("The map above shows the distribution of crime rate in ",
+                      selected_data, " in the ", year, "'s. From the graph, we
+                       can see that King's county is where the crime rate is
+                      highest. The distribution and frequency of crime does not
+                      change dramatically over the year.")
+      } else if (dataset == "Both") {
+        msg <- "You can check crime rate data for each state from the drop down
+        menu on the left. In this page we are only showing you the stats for
+        Washington state. Generally crime distribution is more spreaded out in
+        New York, and it's more concentrated in Washington."
+      }
+      
+    })
+    
     
     
     output$demo_map <- renderPlot({

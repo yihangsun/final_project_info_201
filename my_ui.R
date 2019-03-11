@@ -32,9 +32,11 @@ changes in history along with criminal rates."),
     mainPanel(
 
       tabsetPanel(type = "tabs",
-                tabPanel("plot", plotOutput("plot")),
+                
                 tabPanel("dataTable", dataTableOutput("vio_table")),
                 tabPanel("dataTable", dataTableOutput("pro_table")),
+                tabPanel("Rate by County", plotOutput("plot"), 
+                         textOutput("text1")),
                 tabPanel("Demographic",imageOutput("demo_map"), 
                          imageOutput("demo_map1"), textOutput("text"),
                          plotOutput("demo_cor"), plotOutput("demo_cor1"), 
