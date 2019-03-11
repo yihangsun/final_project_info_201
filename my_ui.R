@@ -18,10 +18,12 @@ changes in history along with criminal rates."),
   sidebarLayout(
     
     sidebarPanel(
-      selectInput(inputId = "dataset", label = "Choose the area(s) you want to search:",
+      selectInput(inputId = "dataset", 
+                  label = "Choose the area(s) you want to search:",
                   choices = c("New York", "Washington", "Both")),
       
-      radioButtons(inputId = "year", label = "choose the time period you want to search:",
+      radioButtons(inputId = "year", 
+                   label = "choose the time period you want to search:",
                    choices = list("1990's" = 1990, 
                                   "2000's" = 2000, 
                                   "2010's" = 2010), 
@@ -35,11 +37,22 @@ changes in history along with criminal rates."),
                 
                 tabPanel("dataTable", dataTableOutput("vio_table")),
                 tabPanel("dataTable", dataTableOutput("pro_table")),
+
                 tabPanel("Rate by County", plotOutput("plot"), 
                          textOutput("text1")),
-                tabPanel("Demographic",imageOutput("demo_map"), 
-                         imageOutput("demo_map1"), textOutput("text"),
-                         plotOutput("demo_cor"), plotOutput("demo_cor1"), 
+
+                tabPanel("Demographic", 
+                         h2("Population Movement -- Crime Acts"),
+                         textOutput("intro_main"), 
+                         textOutput("intro_spe"),
+                         hr(),
+                         imageOutput("demo_map"), 
+                         textOutput("population"),
+                         br(),
+                         imageOutput("demo_map1"),
+                         hr(),
+                         plotOutput("demo_cor"), 
+                         plotOutput("demo_cor1"), 
                          plotOutput("demo_cor2"))
               )
             )
