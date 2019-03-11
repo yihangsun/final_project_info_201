@@ -35,13 +35,19 @@ changes in history along with criminal rates."),
 
       tabsetPanel(type = "tabs",
                 
-                tabPanel("dataTable", 
+                tabPanel("Violent Crime", 
                          h2("How does violent crime relate to changes of history
                             within 1990 to 2016"),
                          textOutput("vio_text"),
                          br(),
                          dataTableOutput("vio_table")),
-                tabPanel("dataTable", dataTableOutput("pro_table")),
+                
+                tabPanel("Property Crime", 
+                         h4("How does property crime relate to changes of history
+                            within 1990 to 2016"),
+                         textOutput("pro_text"),
+                         br(),
+                         dataTableOutput("pro_table")),
 
                 tabPanel("Rate by County", plotOutput("plot"), 
                          textOutput("text1")),

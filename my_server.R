@@ -23,8 +23,8 @@ ny_county_map <- filter(county_map, region == "new york")
 
 joined_wa <- left_join(filtered_wa, wa_county_map, by = c("county" = "subregion"))
 joined_ny <- left_join(filtered_ny, ny_county_map, by = c("County" = "subregion"))
+#View(joined_wa_ny)
 
-View(joined_wa_ny)
 wa_crime_df <- wa_crime_report %>%
   filter(year == c(1990:2016)) %>%
   select(year, SRS_AG_ASSLT, SRS_ARSON, SRS_BURGLARY, SRS_MURDER, SRS_MVT, 
@@ -41,7 +41,7 @@ ny_crime_df <- ny_crime_report %>%
   summarize(ny_ave_violent = mean(Violent.Rate / 10),
             ny_ave_property = mean(Property.Rate / 100))
 wa_ny_crime_df <- left_join(ny_crime_df, wa_crime_df, by = c("Year" = "year"))
-
+#View(wa_ny_crime_df)
 
 selected_data_wa <- wa_crime_report %>%
   filter(county == "spokane" | county == "king" |
@@ -219,6 +219,92 @@ my_server <- function(input, output) {
       }
       filtered_table
     })
+    
+    output$pro_text <- renderText({
+      text_explain <- paste("This table is showing the property crime rate of", 
+                          input$dataset, "state(s) in United States within", 
+                          input$year.)
+      if(input$dataset == "New York") {
+        if(input$year == "1990's") {
+          text_explain <- paste(text_explain, "during 1990's periods, several things happened iN
+                            in New York. In 1990, although the property crime rate is not high yet
+                            the Murder rate hits record-high. The most important events happens at
+                            1994 as  Rudolph Giuliani was sworn in as the 107th Mayor of New York 
+                            City. Among the things he do, he set out to reduce crime and reinvent 
+                            the Times Square area as a family-friendly tourist destination, therefore,
+                            the crime rate either property or violent rate reduce dramatically. As 
+                            you can see in the table, in 1994, the crime rate decrease to the half 
+                            of the rate in pervious years")
+        } else if(input$year == "2000's") {
+          text_front <- paste(text_front, "At April 2000, U.S. unemployment rate 
+                              drops to 3.8 percent, the lowest it has been since the ¡¯60s.
+                              As the unemployment rate decrease, more people find jobs and 
+                              can make money to live. Therefore, those  who need to survive 
+                              by robbing or stealing stuff has largely decreased. Additionally,
+                              durig 2002 to 2008, the stop-and-frisk in New York city increases
+                              from 97,296 to 500,000 incidents, which means the police are more
+                              strict on managing the city's crime. Therefore, during 2000's, the 
+                              property crime rate is almost all below 30% in New York.")
+        } else if(input$year == "2010's") {
+          text_front <- paste(text_front, "At March 2010, construction on the Barcays Center
+                              begins in Downtown Brooklyn, marking a turning point in the 
+                              development and gentrification sweeping across the borough. Therefore,
+                              the property crime rate provides a decreasing trend after 2010. As we
+                              can see in the table, after 2010, the property rate in New York city
+                              reducs from 29% to 28% to 19% etc. One thing also worth to mention:
+                              at November 6, 2012, for the first time in New York city¡¯s recorded history, 
+                              there are no reported shootings, stabbings, or murders on this day.")
+        } 
+        } else if(input$dataset == "Washington") {
+          if(input$year == "1990's") {
+            text_front <- paste(text_front, "one thing need to first mention in the duration of
+                                Washington state is that in 1990 census, Populations grow in urbanized 
+                                areas and decline in rural areas; Washington state continues to draw 
+                                population from outside its borders. Therefore, a increasing amount of 
+                                people in Washington state, especially those foreigner, brings more 
+                                uncertainties of criminal events. For example, the conflict between 
+                                different people in different culture. Therefore, as we can see in the 
+                                table, the property crime rate increases from around 70% to 74% in 1990's")
+          } else if(input$year == "2000's") {
+            text_front <- paste(text_front, "during this periods in Washington State, its
+                                technology starts to develop, however comes more strikes by the
+                                workers. For example, In Mar 17, Boeing Co. agreed to settle a 
+                                38-day strike by its engineers. It was the largest white-collar
+                                walkout in US history. On Nov 21, Newspaper Guild members of the Seattle 
+                                Times and Seattle Post-Intelligencer went on strike. All theses happened 
+                                in 2000, so it foreshadows a high uncompatibility in the society, which can
+                                be reflected in the table that since 2000, the property crime rate is highest 
+                                and last for three years. Only at the end of the 2000's, we can see a slight 
+                                decrease in the property crime rate.")
+          } else if(input$year == "2010's") {
+            text_front <- paste(text_front, "The property crime rate changed a bit in 2010's and become better. 
+                                This is Probably due to  Washington state was developing techonolgy
+                                companies, like Boeing, Amazon, and so on. As we can see in the table,
+                                between 2009 t0 2011, the average property crime rate is around 70%. Although
+                                it stills a large number in Washington state, the situations will get better.")
+          } 
+          } else {
+            if(input$year == "1990's") {
+              text_front <- paste(text_front, "Washington State's property crime rate in 1990's was
+                                  larger than New York. This is probably due to Washington state not developing
+                                  quickly as New York. Since there is still not very much policy in Washington
+                                  than New York, it has more porperty crime rate.")
+            } else if(input$year == "2000's") {
+              text_front <- paste(text_front, "as we all know that at the start of the 21 century, the eastesn 
+                                  America was developed first. Therefore, since then, Washington state in the Western 
+                                  of the United State still have less chance to devleop and grows slower than New York.
+                                  Additionally, Since New York city is the center of legilation, it has more of the
+                                  policies in regulating those crime rate than it than Washington state has.")
+            } else if(input$year == "2010's") {
+              text_front <- paste(text_front, "in 2010's, As we can see that Washington state still has more 
+                                  property crime rate than New York, this is probably due to the population in
+                                  each state. As I mentioned before, Washington state is more open to the immigration,
+                                  so the population increases in this state and therefore could bring more crimes 
+                                  in it.")
+            }
+        }
+    })
+    
     
     output$plot <- renderPlot({
     dataset <- input$dataset
