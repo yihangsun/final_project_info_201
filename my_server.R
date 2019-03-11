@@ -163,6 +163,7 @@ my_server <- function(input, output) {
     
     output$demo_map <- renderPlot({
       dataset <- input$dataset
+      if(dataset != "Both"){
       if (dataset == "New York") {
         selected_data <- selected_data_ny %>%
           select(Year, County, Population) %>%
@@ -230,11 +231,12 @@ my_server <- function(input, output) {
         geom_text(data = coors, aes(x = longc +0.35, y = latc+0.15, label = cities, group = NULL, fill = NULL), 
                   size = 3.9, col = "black", fontface = "italic") 
       
-      
+      }
     })
     
     output$demo_map1 <- renderPlot({
       dataset <- input$dataset
+      if(dataset != "Both"){
       if (dataset == "New York") {
         selected_data <- selected_data_ny %>%
           select(Year, County, Index.Count) %>%
@@ -301,7 +303,7 @@ my_server <- function(input, output) {
         geom_text(data = coors, aes(x = longc +0.35, y = latc+0.15, label = cities, group = NULL, fill = NULL), 
                   size = 3.9, col = "black", fontface = "italic") 
     
-      
+      }
       
     })
     
@@ -411,23 +413,56 @@ my_server <- function(input, output) {
     
     output$population <- renderText({
       if(input$dataset == "Washington" & as.numeric(input$year) == 1990)
-       text <- "In 1990s, the population of Washington state kept increased just 
-            like in 1980s. Large numbers of immigrants moved in at this time 
-            from other states. Not only the local residents but also these 
-            immigrants started to move to urbanized areas and adjacent densely 
-            settled areas."
+        text <- "In 1990s, the population of Washington state kept increased just 
+      like in 1980s. Large numbers of immigrants moved in at this time 
+      from other states. Not only the local residents but also these 
+      immigrants started to move to urbanized areas and adjacent densely 
+      settled areas."
       else
-      if(input$dataset == "Washington" & as.numeric(input$year) == 2000)
-      text <- "In 2000s, by enjoying the economic prosperity, Washington continued
-      its population change. But this time, secondary cities such as Spokane
-      have bigger population growth rates."
-      else
-      if(input$dataset == "Washington" & as.numeric(input$year) == 2010)
-       text <- "In 2010s, The growth of populaiton started to decrease and 
-      Washington is enjoying a healthy population growth rate which ranks 
-      top in the country. Most immigrants at this time choose to move to
-      the urbanized areas."
+        if(input$dataset == "Washington" & as.numeric(input$year) == 2000)
+          text <- "In 2000s, by enjoying the economic prosperity, Washington continued
+        its population change. But this time, secondary cities such as Spokane
+        have bigger population growth rates."
+        else
+          if(input$dataset == "Washington" & as.numeric(input$year) == 2010)
+            text <- "In 2010s, The growth of populaiton started to decrease and 
+          Washington is enjoying a healthy population growth rate which ranks 
+          top in the country. Most immigrants at this time choose to move to
+          the urbanized areas."
+          else
+            if(input$dataset == "New York" & as.numeric(input$year) == 1990)
+              text <- "In 1990s, there is a population decline happened in the areas
+            that experienced the industrial decline starting 1980s(the Rust Belt).
+            The population of New York city stayed stable. The population of the 
+            suburb areas surrounding the New York city started to increase."
+            else
+              if(input$dataset == "New York" & as.numeric(input$year) == 2000)
+                text <- "In 2000s, the Rust Belt areas were still suffering from the 
+              huge decline of local population. However, more and more people started 
+              to move into the urbanized area of New York City and adjacent suburb 
+              areas(meanwhile same things happened in the west coast)."
+              else
+                if(input$dataset == "New York" & as.numeric(input$year) == 2010)
+                  text <- "In 2010s, people started to moved back to the Rust Belt areas.
+                The population of those areas started to increase. The population of 
+                New York city was still increasing but in a slow rate."
     })
+    
+    output$crime <- renderText({
+      if(input$dataset == "Washington" & as.numeric(input$year) == 1990)
+        text <- "In 1990s, The crime rate of all areas in Washington states kept
+      increasing. These places just experienced the big companies recession 
+      (such as the Boeing Bust) and energy crisis."
+      else
+        if(input$dataset == "Washington")
+          text <- "In this time period, most areas of Washington states continued
+        its crime rate declines."
+        else 
+          if(input$dataset == "New York")
+            text <- "The crime rate kept decreasing in most areas. However, the 
+          situations in the Rust Belt areas were still not good."
+    })
+    
     
     
 }
