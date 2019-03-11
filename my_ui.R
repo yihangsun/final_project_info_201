@@ -49,8 +49,11 @@ changes in history along with criminal rates."),
                          br(),
                          dataTableOutput("pro_table")),
 
-                tabPanel("Rate by County", plotOutput("plot"), 
-                         textOutput("text1")),
+                tabPanel("Rate by County", 
+                         h3("How are crime incidents distributed in the state"),
+                         textOutput("text1"),
+                         plotOutput("plot"), 
+                         plotOutput("plot2")),
 
                 tabPanel("Demographic", 
                          h2("Population Movement -- Crime Acts"),

@@ -237,7 +237,7 @@ my_server <- function(input, output) {
                             of the rate in pervious years")
         } else if(input$year == "2000's") {
           text_front <- paste(text_front, "At April 2000, U.S. unemployment rate 
-                              drops to 3.8 percent, the lowest it has been since the ¡¯60s.
+                              drops to 3.8 percent, the lowest it has been since the 60s.
                               As the unemployment rate decrease, more people find jobs and 
                               can make money to live. Therefore, those  who need to survive 
                               by robbing or stealing stuff has largely decreased. Additionally,
@@ -252,7 +252,7 @@ my_server <- function(input, output) {
                               the property crime rate provides a decreasing trend after 2010. As we
                               can see in the table, after 2010, the property rate in New York city
                               reducs from 29% to 28% to 19% etc. One thing also worth to mention:
-                              at November 6, 2012, for the first time in New York city¡¯s recorded history, 
+                              at November 6, 2012, for the first time in New York city??s recorded history, 
                               there are no reported shootings, stabbings, or murders on this day.")
         } 
         } else if(input$dataset == "Washington") {
@@ -313,8 +313,8 @@ my_server <- function(input, output) {
       selected_data <- joined_ny
     } else if (dataset == "Washington" | dataset == "Both") {
       selected_data <- joined_wa
-    }
-    selected_data <- selected_data[selected_data$year > year & selected_data < (year + 10),]
+    } 
+    selected_data <- selected_data[selected_data$year > year & selected_data$year < (year + 10),]
     ggplot(data = selected_data) +
       geom_polygon(aes(x = long, y = lat, group = group, fill = selected_data[,3])) +
       coord_quickmap() +
@@ -322,27 +322,41 @@ my_server <- function(input, output) {
                           low = "pink", high = "red")
     })
     
+    output$plot2 <- renderPlot({
+      dataset <- input$dataset
+      year <- as.numeric(input$year)
+      if (dataset == "Both") {
+        selected_data <- joined_wa
+        joined_ny <- joined_ny[joined_ny$year > year & joined_ny$year < (year + 10), ]
+        ggplot(data = joined_ny) +
+          geom_polygon(aes(x = long, y = lat, group = group, fill = joined_ny[,3])) +
+          coord_quickmap() +
+          scale_fill_gradient(limits = range(joined_ny[3]),
+                              low = "pink", high = "red")
+      }
+    })
+    
     output$text1 <- renderText({
       dataset <- input$dataset
       year <- input$year
       if (dataset == "New York") {
         selected_data <- "New York"
-        msg <- paste0("The map above shows the distribution of crime rate in ",
+        msg <- paste0("The map below shows the distribution of crime rate in ",
                       selected_data, " in the ", year, "'s. We can see that
                       crime rates are almost the same in New york. Based on the
                       legend on the right, crime is diminshing over the decades.")
       } else if (dataset == "Washington") {
         selected_data <- "Washington"
-        msg <- paste0("The map above shows the distribution of crime rate in ",
+        msg <- paste0("The map below shows the distribution of crime rate in ",
                       selected_data, " in the ", year, "'s. From the graph, we
                        can see that King's county is where the crime rate is
                       highest. The distribution and frequency of crime does not
                       change dramatically over the year.")
       } else if (dataset == "Both") {
-        msg <- "You can check crime rate data for each state from the drop down
-        menu on the left. In this page we are only showing you the stats for
-        Washington state. Generally crime distribution is more spreaded out in
-        New York, and it's more concentrated in Washington."
+        msg <- paste0("The maps below represent the crime incidents distribution in 
+        Washington and New York respectively in the ", year, "'s. Comparing this two garphs we can
+        tell that generally crime distribution is more spreaded out in
+        New York, and it's more concentrated in Washington.")
       }
       
     })
