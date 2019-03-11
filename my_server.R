@@ -192,7 +192,7 @@ my_server <- function(input, output) {
         geom_polygon() +
         scale_fill_gradient(limits = range(selected_data$percentage), 
                             low = "pink", high = "red") +
-        ggtitle("population") +
+        ggtitle("Here are the population rate change in the given time period:") +
         theme(axis.title.x = element_blank(),
               axis.text.x = element_blank(),
               axis.ticks.x = element_blank()) +
@@ -263,7 +263,7 @@ my_server <- function(input, output) {
         geom_polygon() +
         scale_fill_gradient(limits = range(selected_data$percentage), 
                             low = "pink", high = "red") +
-        ggtitle("crime") +
+        ggtitle("Here are the criminal rate change in the given time period:") +
         theme(axis.title.x = element_blank(),
               axis.text.x = element_blank(),
               axis.ticks.x = element_blank()) +
@@ -364,9 +364,44 @@ my_server <- function(input, output) {
       
     })
     
-    output$text <- renderText({
-      if(input$dataset == "Washington")
-       a <- "hi *hi"
+    
+    output$intro_main <- renderText({
+    "In this section, we will study how the population reidstribution
+     will relate to the local situation of criminal acts in east coast and west 
+    coast for the last three decades. We will use New York state and Washington
+    state as representives of these two coast areas. Something happened here,
+    it might also happened in other places."
+    })
+    
+    output$intro_spe <- renderText({
+    "According to Claude Fischer's subcultural theory, the movements of human beings
+    encourage social integration. People with same interests or backgrounds will be
+    brought together which means this kind of demographic change could help
+    creating the social network for criminals. However, crime rates change and 
+    pooulation change will not be associated with a linear relationship since criminal
+    behavior is a dynamic process including different factors. More socio-economic
+    causes should be considered. We will start our study by looking at the situation
+    of the areas with dramatic population changes in these two states."
+    })
+    
+    output$population <- renderText({
+      if(input$dataset == "Washington" & as.numeric(input$year) == 1990)
+       text <- "In 1990s, the population of Washington state kept increased just 
+            like in 1980s. Large numbers of immigrants moved in at this time 
+            from other states. Not only the local residents but also these 
+            immigrants started to move to urbanized areas and adjacent densely 
+            settled areas."
+      else
+      if(input$dataset == "Washington" & as.numeric(input$year) == 2000)
+      text <- "In 2000s, by enjoying the economic prosperity, Washington continued
+      its population change. But this time, secondary cities such as Spokane
+      have bigger population growth rates."
+      else
+      if(input$dataset == "Washington" & as.numeric(input$year) == 2010)
+       text <- "In 2010s, The growth of populaiton started to decrease and 
+      Washington is enjoying a healthy population growth rate which ranks 
+      top in the country. Most immigrants at this time choose to move to
+      the urbanized areas."
     })
     
     
