@@ -41,7 +41,7 @@ ny_crime_df <- ny_crime_report %>%
   summarize(ny_ave_violent = mean(Violent.Rate / 10),
             ny_ave_property = mean(Property.Rate / 100))
 wa_ny_crime_df <- left_join(ny_crime_df, wa_crime_df, by = c("Year" = "year"))
-View(wa_ny_crime_df)
+
 
 selected_data_wa <- wa_crime_report %>%
   filter(county == "spokane" | county == "king" |
@@ -95,6 +95,108 @@ my_server <- function(input, output) {
       }
       filtered_table
     })
+    
+    output$vio_text <- renderText({
+      text_front <- paste("The data table is showing the criminal rate about", 
+                          input$dataset, "state(s) in United States within", 
+                          input$year.)
+      if(input$dataset == "New York") {
+        if(input$year == "1990's") {
+          text_front <- paste(text_front, "In 1990's decade, United States were 
+                              still developing and focusing on improving security
+                              and technology. Therefore, this period of time 
+                              raised low-weaponed terrorism and crimes related 
+                              to drugs. However, more people were focusing on
+                              building houses and fighting for their careers.
+                              As report said, from 1950 to 2000, 800,000 homes 
+                              and apartments were created—while the number of 
+                              residents only increased by just fewer than 
+                              120,000 people.")
+        } else if(input$year == "2000's") {
+          text_front <- paste(text_front, "During 2000's, New York became the most 
+                              popular city to find jobs. As population
+                              increased, the security increased as well. Police 
+                              stations started to dearmed terrorisms and added 
+                              more safety ensures in New York States. The peace
+                              didn't last long, until year of 2007, the Great 
+                              Recession started and lasted for 2 years. This big 
+                              movement of economics changed thousands of American 
+                              people's lives. Between 2007 and 2009, there were a
+                              large increase of amounts of homeless people and big
+                              decrease of GDP of Unites States. Especially, there 
+                              was a big increase of criminal rates in violent crimes.
+                              Therefore, from The Great Recession, we can conclude
+                              that economy directly affects violent crime rate.")
+        } else if(input$year == "2010's") {
+          text_front <- paste(text_front, "Year 2010 was a really sad year. There
+                              was a lot of terrorism going on in New York. In 2010, 
+                              the Times Square had a car bombing which terrified 
+                              a lot of people and stimulated the increase of violent
+                              criminal rates to the maximum point in past eight years.
+                              One year after, the violent crimes was slightly decreased,
+                              but people in New York were still very aggressive because 
+                              of the Weinergate Sexting Scandal Erupts event. New
+                              Yorkers were mad at American congress. In year 2012, 
+                              the criminal rate decreased because of a big hurricane
+                              in New York. People was trying to survive and decrease
+                              money loss instead of to do evils. Later on, New York 
+                              put more attention on economy, so the criminal rate 
+                              was flatten in a while.")
+        } 
+      } else if(input$dataset == "Washington") {
+        if(input$year == "1990's") {
+          text_front <- paste(text_front, "Washington State in 1990's was relly peaceful.
+                              It was the time period for Washington to develop farming
+                              and increasement of crops. The economy was increased, so
+                              the violent crime was decreased. And also, in 1990's, 
+                              a lot of schoosls and museums opened. People were educated 
+                              well. The criminal rate kept flat because Washington 
+                              was in developing the whole time.")
+        } else if(input$year == "2000's") {
+          text_front <- paste(text_front, "Washington State started to develop 
+                              technology and economy accosiating with business.
+                              However, the violent criminal rate slightly increased
+                              because there were several severe killers which frightened
+                              public. And also, in 2006, gay marriage was a hot topic
+                              which caused a raise of criminal rates. However, one
+                              year later, Boeing company revealed 787 jet to public
+                              which attracted a lot of attentions and increased
+                              economy as well. Therefore, the violent criminal rate in
+                              Washington in 2000's was shaking up and down which 
+                              both caused by social events and technology developments.")
+        } else if(input$year == "2010's") {
+          text_front <- paste(text_front, "There were a few killing of terrorisms
+                              happened in 2010's. And Washington was developing techonolgy
+                              companies, like Boeing, Amazon, and so on. The violent criminal
+                              rate was flat but still higher than 10 years ago.")
+        } 
+      } else {
+        if(input$year == "1990's") {
+          text_front <- paste(text_front, "Washington State in 1990's was relly peaceful 
+                              because they were working on crops and economy. However, 
+                              in New York, there were a lot of terrorisms and gangsters
+                              going on; people in New York lived in fear. Therefore,
+                              comparing to Washington States, New York had a really
+                              high average violent crime rate.")
+        } else if(input$year == "2000's") {
+          text_front <- paste(text_front, "Washington State started to develop 
+                              technologies, but had more terrorisms and activists 
+                              on social events. Therefore the violent crime rate was
+                              high. New York's crime rate decreased a lot bit but still 
+                              higher than Washington State. New York became a big
+                              city with great economy. But, the Great Recession 
+                              happened to whole United States, during this period
+                              of time, all States experienced high c=violent criminal
+                              rates.")
+        } else if(input$year == "2010's") {
+          text_front <- paste(text_front, "in 2010's, both of States had higher violent
+                              crime rate than ten years ago. However, the whole Unite
+                              States was in developing economy and technologies. 
+                              More people were educated. So the crime rate was flat.")
+        }
+      }
+   })
+    
     
     output$pro_table <- renderDataTable({
       filtered_table <- wa_ny_crime_df
