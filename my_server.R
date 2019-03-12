@@ -830,7 +830,11 @@ my_server <- function(input, output) {
         if(input$dataset == "Both")
           paste('<p><B>Dense population = less crime counts<B></p>',
                 '<p><B>stable economic situation = less crime counts</B></p>'
-                )
+                ) })
+        output$subtitle <- renderText({
+          if(input$dataset != "Both")
+            paste('<p><B>More Specific Explorations:<B></p>'
+            )
       })
     
     
