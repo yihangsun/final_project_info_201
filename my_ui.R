@@ -78,18 +78,21 @@ changes in history along with criminal rates."),
                          textOutput("intro_spe"),
                          hr(),
                          h3("The Big Picture of What Happened"),
+                         htmlOutput("conclusion1"),
+                         htmlOutput("slogan1"),
+                         htmlOutput("conclusion2"),
+                         htmlOutput("slogan2"),
                          imageOutput("demo_map"), 
                          textOutput("population"),
                          br(),
                          imageOutput("demo_map1"),
                          textOutput("crime"),
                          hr(),
-                         h3("More Specific Explorations"),
+                         htmlOutput("subtitle"),
                          plotOutput("demo_cor"), 
                          plotOutput("demo_cor1"), 
                          plotOutput("demo_cor2"),
-                         textOutput("number1"),
-                         textOutput("number2")
+                         htmlOutput("number1")
                          )
               )
           )

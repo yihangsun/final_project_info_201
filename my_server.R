@@ -722,6 +722,7 @@ my_server <- function(input, output) {
                   text <- "In 2010s, people started to moved back to the Rust Belt areas.
                 The population of those areas started to increase. The population of 
                 New York city was still increasing but in a slow rate."
+
     })
     
     output$crime <- renderText({
@@ -751,7 +752,8 @@ my_server <- function(input, output) {
 
     output$number1 <- renderText({
       if(input$dataset == "Washington")
-      paste("The correlation rate
+      paste('<p>Things needed to be catched up:<p>',
+      "The correlation rate
       of crime count and population in Great Seattle Area is ", 
       round(cor_wa, digits = 3), 
       " which means when the population increase, the crime count decrease.",
@@ -763,18 +765,73 @@ my_server <- function(input, output) {
       round(pop_wa_change, digits = 3),"%. This shows that the populations of 
       most places in Washington increased in different rates.")
       else if(input$dataset == "New York")
-        paste("The population rate change of New York city for the last
+        paste('<p>Things needed to be catched up:<p>'
+              ,"The population rate change of New York city for the last
               three decades is ",round(pop_ny_change_u,digits = 3), "%. 
               This number of the Rust 
               Belt areas is ", round(pop_ny_change_r, digits = 3), "%. 
               We can find out that
               unlike somewhere else, the population living in the Rust Belt 
               area(such as Buffalo) decreased for the last three decades. But
-              this trend has been stopped in recent years. We can find out that 
-              population increase 
+              this trend has been stopped in recent years. According to the 
+              correlation plot ,we can find out that population increase 
               has a bigger impact of decreasing crime in metropolitan urbanized 
               areas than country areas or small cities.")
     })
+
+      output$conclusion1 <- renderText({
+        if(input$dataset == "Both")
+        "From the history of Washington state and New York state, we can find out 
+        that there is a population redistribution pattern happened. From 1990s, 
+        in east coast, the past blue-collar manufacturing regions such as
+        West New York state and Pennsylvania started to lose 
+        its energy and people started to leave. This trend seems to be ended 
+        this years. In west coast, the population kept increasing for three 
+        decades. If we want to discuss the relationship between crime rate and
+        population change, we would find out that in urbanized areas, increasing
+        population means declining crime rate. However, in country areas or scattered
+        small cities, increased population means increased crime rate. Overall, it shows
+        that those first tier cities like Seattle and New York have decreasing
+        crime counts. In population-decreasing areas in east coast or non-urbanized 
+        areas in west coast, the crime rates remain the same or have rises."
+      })
+      
+      output$slogan1 <- renderText({
+        if(input$dataset == "Both")
+          paste('<p></p>', '<p></p>',
+            '<p><B>Conclusion:<B></p>',
+            '<p><B>Increasing population(in big cities) = less crime counts</B></p>',
+            '<p><B>Increasing population(in other areas) or 
+            decreasing population = more crime counts</B></p>',
+            '<p><B>Big cities in both coasts are getting safer<B></p>',
+            '<p><B>Scattered small cities and country areas used to be
+             dangerous, but now it is getting safer<B></p>',
+            '<p><B>The situation in the Rust Belt Area is getting better recently.<B></p>'
+            )
+        
+        
+      })
+      
+      output$conclusion2 <- renderText({
+        if(input$dataset == "Both")
+          "In fact, we can find out that economy situation is the real cause behind
+        the crime count change. When people moving into big city, it means the city is
+        getting energetic and flourishing. When the population desnity is getting bigger,
+        the cost to provide law enforcement is getting lower. People can enjoy better
+        social benefits if they live in densely populated regions which means they are
+        the society is safer. From the view of the whole country, people lead to move
+        to places with better economic potential. West coast becomes the target place
+        for those kind of people. US was getting through energy crisis and economic
+        recession before 1990s so that the crime rate was still unstable(relative high). With the 
+        development of mature social system and economic situation, the crime rate change
+        is getting lower(stable)."
+      })
+      output$slogan2 <- renderText({
+        if(input$dataset == "Both")
+          paste('<p><B>Dense population = less crime counts<B></p>',
+                '<p><B>stable economic situation = less crime counts</B></p>'
+                )
+      })
     
     
     
