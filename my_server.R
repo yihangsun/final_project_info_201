@@ -70,6 +70,62 @@ coors_ny <- data.frame(
   stringsAsFactors = FALSE
 )
 
+pop_wa <- selected_data_wa %>%
+  filter(year == 2016)
+pop_wa_2016 <- sum(pop_wa$POP_TOTAL)
+pop_waa <- selected_data_wa %>%
+  filter(year == 1990)
+pop_wa_1990 <- sum(pop_waa$POP_TOTAL)
+pop_wa_change <- pop_wa_2016 / pop_wa_1990 * 100 - 100
+
+
+pop_ny_r <- selected_data_ny %>%
+  filter(Year == 2016) %>%
+  filter(County == "chautauqua" | County == "erie" |
+           County == "niagara" )
+pop_ny_2016_r <- sum(pop_ny_r$Population)
+pop_nyy_r <- selected_data_ny %>%
+  filter(Year == 1990) %>%
+  filter(County == "chautauqua" | County == "erie" |
+           County == "niagara" )
+pop_ny_1990_r <- sum(pop_nyy_r$Population)
+pop_ny_change_r <- pop_ny_2016_r / pop_ny_1990_r * 100 - 100
+
+pop_ny_u <- selected_data_ny %>%
+  filter(Year == 2016) %>%
+  filter(County == "new york" |
+           County == "kings" | County == "queens" |
+           County == "bronx")
+pop_ny_2016_u <- sum(pop_ny_u$Population)
+pop_nyy_u <- selected_data_ny %>%
+  filter(Year == 1990) %>%
+  filter(County == "new york" |
+           County == "kings" | County == "queens" |
+           County == "bronx")
+pop_ny_1990_u <- sum(pop_nyy_u$Population)
+pop_ny_change_u <- pop_ny_2016_u / pop_ny_1990_u * 100 - 100
+
+
+data_wa <- selected_data_wa %>%
+  select(year, county, POP_TOTAL, SRS_TOTAL) %>%
+  filter(county == "king")
+cor_wa <- cor(data_wa$POP_TOTAL, data_wa$SRS_TOTAL)
+
+data_ny <- selected_data_ny  %>%
+  select(Year, County, Population, Index.Count)%>%
+  filter(County == "new york")
+cor_ny <- cor(data_ny$Population, data_ny$Index.Count)
+
+data_wa_c <- selected_data_wa %>%
+  select(year, county, POP_TOTAL, SRS_TOTAL) %>%
+  filter(county == "benton") %>%
+  filter(year <= 2011)
+cor_wa_c <- cor(data_wa_c$POP_TOTAL, data_wa_c$SRS_TOTAL)
+
+data_ny_c <- selected_data_ny  %>%
+  select(Year, County, Population, Index.Count)%>%
+  filter(County == "hamilton")
+cor_ny_c <- cor(data_ny_c$Population, data_ny_c$Index.Count)
 
 
 my_server <- function(input, output) {
@@ -531,7 +587,7 @@ my_server <- function(input, output) {
         names(selected_data)[3] <- "Population"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, color = county, na.rm = TRUE)) + 
           geom_smooth(method = 'lm', se=FALSE) +
-          ggtitle("         Here is the plot about the correlation between crime counts
+          ggtitle("       +Here is the plot about the correlation between crime counts
           and population in every counties in the given time period:") +
           geom_point() 
       }
@@ -542,7 +598,7 @@ my_server <- function(input, output) {
         names(selected_data)[4] <- "Crime_Count"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, color = County, na.rm = TRUE)) + 
           geom_smooth(method = 'lm', se=FALSE) +
-          ggtitle("         Here is the plot about the correlation between crime counts
+          ggtitle("       +Here is the plot about the correlation between crime counts
           and population in every counties in the given time period:") +
           geom_point() 
       }
@@ -559,7 +615,7 @@ my_server <- function(input, output) {
         names(selected_data)[4] <- "Crime_Count"
         names(selected_data)[3] <- "Population"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, na.rm = TRUE)) + 
-          ggtitle("         Here is the plot about the correlation between crime counts
+          ggtitle("         +Here is the plot about the correlation between crime counts
           and population in the representative urbanized areas(king county) 
           in this state in the last three decades:") +
           geom_smooth(method = 'lm', se=FALSE) +
@@ -572,7 +628,7 @@ my_server <- function(input, output) {
         names(selected_data)[4] <- "Crime_Count"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, na.rm = TRUE)) + 
           geom_smooth(method = 'lm', se=FALSE) +
-          ggtitle("         Here is the plot about the correlation between crime counts
+          ggtitle("         +Here is the plot about the correlation between crime counts
           and population in the representative urbanized areas(New York city) 
           in this state in the last three decades:") +
           geom_point() 
@@ -590,7 +646,7 @@ my_server <- function(input, output) {
         names(selected_data)[4] <- "Crime_Count"
         names(selected_data)[3] <- "Population"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, na.rm = TRUE)) + 
-          ggtitle("         Here is the plot about the correlation between crime counts
+          ggtitle("         +Here is the plot about the correlation between crime counts
           and population in the representative country areas(Benton county) in 
           this state in the last three decades:") +
           geom_point() 
@@ -601,7 +657,7 @@ my_server <- function(input, output) {
           filter(County == "hamilton")
         names(selected_data)[4] <- "Crime_Count"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, na.rm = TRUE)) + 
-          ggtitle("          Here is the plot about the correlation between crime counts
+          ggtitle("         +Here is the plot about the correlation between crime counts
           and population in the representative country areas(Hamilton county) 
           in this state in the last three decades:") +
           geom_point() 
@@ -690,6 +746,34 @@ my_server <- function(input, output) {
             text <- "The crime rate in the Rust Belt areas decreased in this
           time period. The crime rate in the some New York city areas 
           and country areas started to increase."
+    })
+    
+
+    output$number1 <- renderText({
+      if(input$dataset == "Washington")
+      paste("The correlation rate
+      of crime count and population in Great Seattle Area is ", 
+      round(cor_wa, digits = 3), 
+      " which means when the population increase, the crime count decrease.",
+      "this number of country areas or small cities of Washington is ", 
+      round(cor_wa_c, digits = 3), ". We can find out that population increase 
+      has a bigger impact of decreasing crime in metropolitan urbanized 
+      areas than country areas or small cities. Meanwhile, the population
+      rate change for Washington state for last three decades is ", 
+      round(pop_wa_change, digits = 3),"%. This shows that the populations of 
+      most places in Washington increased in different rates.")
+      else if(input$dataset == "New York")
+        paste("The population rate change of New York city for the last
+              three decades is ",round(pop_ny_change_u,digits = 3), "%. 
+              This number of the Rust 
+              Belt areas is ", round(pop_ny_change_r, digits = 3), "%. 
+              We can find out that
+              unlike somewhere else, the population living in the Rust Belt 
+              area(such as Buffalo) decreased for the last three decades. But
+              this trend has been stopped in recent years. We can find out that 
+              population increase 
+              has a bigger impact of decreasing crime in metropolitan urbanized 
+              areas than country areas or small cities.")
     })
     
     

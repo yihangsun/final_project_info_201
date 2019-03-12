@@ -87,7 +87,10 @@ changes in history along with criminal rates."),
                          h3("More Specific Explorations"),
                          plotOutput("demo_cor"), 
                          plotOutput("demo_cor1"), 
-                         plotOutput("demo_cor2"))
+                         plotOutput("demo_cor2"),
+                         textOutput("number1"),
+                         textOutput("number2")
+                         )
               )
           )
       ), 
