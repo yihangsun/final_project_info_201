@@ -19,7 +19,7 @@ my_ui <- fluidPage(
                     "))
     ),
   
-  headerPanel(strong("Eastern and Western Criminal Behavior Comparsion")),
+  headerPanel(strong("Eastern and Western Criminal Behavior Comparison")),
   br(),
   h5(em("The crime rate of representative state in Eastern and Western States of 
      U.S.A in past three decades")),
