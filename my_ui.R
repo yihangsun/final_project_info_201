@@ -74,6 +74,7 @@ changes in history along with criminal rates."),
                 tabPanel("Demographic", 
                          h3("Population Movement -- Crime Acts"),
                          textOutput("intro_main"), 
+                         br(),
                          textOutput("intro_spe"),
                          hr(),
                          h3("The Big Picture of What Happened"),
@@ -115,7 +116,10 @@ changes in history along with criminal rates."),
              "WA crime rate by county"),
       br(),
       tags$a(href = "https://www.areavibes.com/new+york-ny/crime/",
-            "NY crime rate by county")
+            "NY crime rate by county"),
+      br(),
+      tags$a(href = "https://www-journals-uchicago-edu.offcampus.lib.washington.edu/doi/10.1086/230753",
+             "Claude Fischer's Subcultural Theory")
     )
   )
 )

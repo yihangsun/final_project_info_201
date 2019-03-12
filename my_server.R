@@ -531,6 +531,8 @@ my_server <- function(input, output) {
         names(selected_data)[3] <- "Population"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, color = county, na.rm = TRUE)) + 
           geom_smooth(method = 'lm', se=FALSE) +
+          ggtitle("         Here is the plot about the correlation between crime counts
+          and population in every counties in the given time period:") +
           geom_point() 
       }
       else if (dataset == "New York") {
@@ -540,6 +542,8 @@ my_server <- function(input, output) {
         names(selected_data)[4] <- "Crime_Count"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, color = County, na.rm = TRUE)) + 
           geom_smooth(method = 'lm', se=FALSE) +
+          ggtitle("         Here is the plot about the correlation between crime counts
+          and population in every counties in the given time period:") +
           geom_point() 
       }
       
@@ -555,6 +559,9 @@ my_server <- function(input, output) {
         names(selected_data)[4] <- "Crime_Count"
         names(selected_data)[3] <- "Population"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, na.rm = TRUE)) + 
+          ggtitle("         Here is the plot about the correlation between crime counts
+          and population in the representative urbanized areas(king county) 
+          in this state in the last three decades:") +
           geom_smooth(method = 'lm', se=FALSE) +
           geom_point() 
       }
@@ -565,6 +572,9 @@ my_server <- function(input, output) {
         names(selected_data)[4] <- "Crime_Count"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, na.rm = TRUE)) + 
           geom_smooth(method = 'lm', se=FALSE) +
+          ggtitle("         Here is the plot about the correlation between crime counts
+          and population in the representative urbanized areas(New York city) 
+          in this state in the last three decades:") +
           geom_point() 
       }
       
@@ -580,6 +590,9 @@ my_server <- function(input, output) {
         names(selected_data)[4] <- "Crime_Count"
         names(selected_data)[3] <- "Population"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, na.rm = TRUE)) + 
+          ggtitle("         Here is the plot about the correlation between crime counts
+          and population in the representative country areas(Benton county) in 
+          this state in the last three decades:") +
           geom_point() 
       }
       else if (dataset == "New York") {
@@ -588,6 +601,9 @@ my_server <- function(input, output) {
           filter(County == "hamilton")
         names(selected_data)[4] <- "Crime_Count"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, na.rm = TRUE)) + 
+          ggtitle("          Here is the plot about the correlation between crime counts
+          and population in the representative country areas(Hamilton county) 
+          in this state in the last three decades:") +
           geom_point() 
       }
       
@@ -603,7 +619,9 @@ my_server <- function(input, output) {
     })
     
     output$intro_spe <- renderText({
-    "According to Claude Fischer's subcultural theory, the movements of human beings
+    "According to Claude Fischer's subcultural theory(check more information
+    at the link in Reference)
+    , the movements of human beings
     encourage social integration. People with same interests or backgrounds will be
     brought together which means this kind of demographic change could help
     creating the social network for criminals. However, crime rates change and 
@@ -660,9 +678,18 @@ my_server <- function(input, output) {
           text <- "In this time period, most areas of Washington states continued
         its crime rate declines."
         else 
-          if(input$dataset == "New York")
+          if(input$dataset == "New York" & as.numeric(input$year) == 1990)
             text <- "The crime rate kept decreasing in most areas. However, the 
           situations in the Rust Belt areas were still not good."
+        else 
+          if(input$dataset == "New York" & as.numeric(input$year) == 2000)
+            text <- "The crime rate kept decreasing in most areas. However, the 
+          situations in the Rust Belt areas basically remained the same."
+        else 
+          if(input$dataset == "New York" & as.numeric(input$year) == 2010)
+            text <- "The crime rate in the Rust Belt areas decreased in this
+          time period. The crime rate in the some New York city areas 
+          and country areas started to increase."
     })
     
     
