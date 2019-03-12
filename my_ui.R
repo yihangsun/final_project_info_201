@@ -52,6 +52,7 @@ changes in history along with criminal rates."),
                 tabPanel("Rate by County", 
                          h3("How are crime incidents distributed in the state"),
                          textOutput("text1"),
+                         br(),
                          plotOutput("plot"), 
                          plotOutput("plot2")),
 
