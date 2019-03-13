@@ -23,25 +23,23 @@ ny_county_map <- filter(county_map, region == "new york")
 
 joined_wa <- left_join(filtered_wa, wa_county_map, by = c("county" = "subregion"))
 joined_ny <- left_join(filtered_ny, ny_county_map, by = c("County" = "subregion"))
-#View(joined_wa_ny)
 
 wa_crime_df <- wa_crime_report %>%
   filter(year == c(1990:2016)) %>%
   select(year, SRS_AG_ASSLT, SRS_ARSON, SRS_BURGLARY, SRS_MURDER, SRS_MVT, 
          SRS_RAPE, SRS_ROBBERY, SRS_THEFT, SRS_TOTAL) %>%
   group_by(year) %>%
-  summarize(wa_ave_violent = mean((SRS_MURDER + SRS_BURGLARY + SRS_AG_ASSLT + 
+  summarize(mean_violent_Washington = mean((SRS_MURDER + SRS_BURGLARY + SRS_AG_ASSLT + 
                                      SRS_RAPE) / SRS_TOTAL * 100),
-            wa_ave_proporty = mean((SRS_ROBBERY + SRS_THEFT + SRS_MVT + 
+            mean_property_Washington = mean((SRS_ROBBERY + SRS_THEFT + SRS_MVT + 
                                       SRS_ARSON) / SRS_TOTAL * 100))
 ny_crime_df <- ny_crime_report %>%
   filter(Year == c(1990:2016)) %>%
   select(Year, Violent.Rate, Property.Rate) %>%
   group_by(Year) %>%
-  summarize(ny_ave_violent = mean(Violent.Rate / 10),
-            ny_ave_property = mean(Property.Rate / 100))
+  summarize(mean_violent_New_York = mean(Violent.Rate / 10),
+            mean_property_New_York = mean(Property.Rate / 100))
 wa_ny_crime_df <- left_join(ny_crime_df, wa_crime_df, by = c("Year" = "year"))
-#View(wa_ny_crime_df)
 
 selected_data_wa <- wa_crime_report %>%
   filter(county == "spokane" | county == "king" |
@@ -78,13 +76,13 @@ my_server <- function(input, output) {
       filtered_table <- wa_ny_crime_df
       if(input$dataset == "New York") {
         filtered_vio_ny <- filtered_table %>% 
-          select(Year, ny_ave_violent)
+          select(Year, mean_violent_New_York)
       } else if(input$dataset == "Washington") {
         filter_vio_wa <- filtered_table %>%
-          select(Year, wa_ave_violent)
+          select(Year, mean_violent_Washington)
       } else if(input$dataset == "Both") {
         filter_vio_both <- filtered_table %>%
-          select(Year, wa_ave_violent, ny_ave_violent)
+          select(Year, mean_violent_Washington, mean_violent_New_York)
       }
       if(input$year == "2010's") {
         filtered_table <- filtered_table %>%
@@ -202,13 +200,13 @@ my_server <- function(input, output) {
       filtered_table <- wa_ny_crime_df
       if(input$dataset == "New York") {
         filtered_pro_ny <- filtered_table %>% 
-          select(Year, ny_ave_property)
+          select(Year, mean_property_New_York)
       } else if(input$dataset == "Washington") {
         filter_pro_wa <- filtered_table %>%
           select(Year, wa_ave_proporty)
       } else if(input$dataset == "Both") {
         filter_pro_both <- filtered_table %>%
-          select(Year, wa_ave_proporty, ny_ave_property)
+          select(Year, wa_ave_proporty, mean_property_New_York)
       }
       if(input$year == "2010's") {
         filtered_table <- filtered_table %>%
