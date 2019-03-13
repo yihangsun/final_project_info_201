@@ -385,9 +385,10 @@ my_server <- function(input, output) {
       year <- as.numeric(input$year)
       if (dataset == "Both") {
         selected_data <- joined_wa
+        colnames(joined_ny)[3] <- "Crime_rate"
         joined_ny <- joined_ny[joined_ny$year > year & joined_ny$year < (year + 10), ]
         ggplot(data = joined_ny) +
-          geom_polygon(aes(x = long, y = lat, group = group, fill = joined_ny[,3])) +
+          geom_polygon(aes(x = long, y = lat, group = group, fill = Crime_rate)) +
           coord_quickmap() +
           scale_fill_gradient(limits = range(joined_ny[3]),
                               low = "pink", high = "red")
