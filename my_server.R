@@ -68,6 +68,62 @@ coors_ny <- data.frame(
   stringsAsFactors = FALSE
 )
 
+pop_wa <- selected_data_wa %>%
+  filter(year == 2016)
+pop_wa_2016 <- sum(pop_wa$POP_TOTAL)
+pop_waa <- selected_data_wa %>%
+  filter(year == 1990)
+pop_wa_1990 <- sum(pop_waa$POP_TOTAL)
+pop_wa_change <- pop_wa_2016 / pop_wa_1990 * 100 - 100
+
+
+pop_ny_r <- selected_data_ny %>%
+  filter(Year == 2016) %>%
+  filter(County == "chautauqua" | County == "erie" |
+           County == "niagara" )
+pop_ny_2016_r <- sum(pop_ny_r$Population)
+pop_nyy_r <- selected_data_ny %>%
+  filter(Year == 1990) %>%
+  filter(County == "chautauqua" | County == "erie" |
+           County == "niagara" )
+pop_ny_1990_r <- sum(pop_nyy_r$Population)
+pop_ny_change_r <- pop_ny_2016_r / pop_ny_1990_r * 100 - 100
+
+pop_ny_u <- selected_data_ny %>%
+  filter(Year == 2016) %>%
+  filter(County == "new york" |
+           County == "kings" | County == "queens" |
+           County == "bronx")
+pop_ny_2016_u <- sum(pop_ny_u$Population)
+pop_nyy_u <- selected_data_ny %>%
+  filter(Year == 1990) %>%
+  filter(County == "new york" |
+           County == "kings" | County == "queens" |
+           County == "bronx")
+pop_ny_1990_u <- sum(pop_nyy_u$Population)
+pop_ny_change_u <- pop_ny_2016_u / pop_ny_1990_u * 100 - 100
+
+
+data_wa <- selected_data_wa %>%
+  select(year, county, POP_TOTAL, SRS_TOTAL) %>%
+  filter(county == "king")
+cor_wa <- cor(data_wa$POP_TOTAL, data_wa$SRS_TOTAL)
+
+data_ny <- selected_data_ny  %>%
+  select(Year, County, Population, Index.Count)%>%
+  filter(County == "new york")
+cor_ny <- cor(data_ny$Population, data_ny$Index.Count)
+
+data_wa_c <- selected_data_wa %>%
+  select(year, county, POP_TOTAL, SRS_TOTAL) %>%
+  filter(county == "benton") %>%
+  filter(year <= 2011)
+cor_wa_c <- cor(data_wa_c$POP_TOTAL, data_wa_c$SRS_TOTAL)
+
+data_ny_c <- selected_data_ny  %>%
+  select(Year, County, Population, Index.Count)%>%
+  filter(County == "hamilton")
+cor_ny_c <- cor(data_ny_c$Population, data_ny_c$Index.Count)
 
 
 my_server <- function(input, output) {
@@ -309,12 +365,14 @@ my_server <- function(input, output) {
     year <- as.numeric(input$year)
     if (dataset == "New York") {
       selected_data <- joined_ny
+      colnames(selected_data)[3] <- "Crime_rate"
     } else if (dataset == "Washington" | dataset == "Both") {
       selected_data <- joined_wa
+      colnames(selected_data)[3] <- "Crime_rate"
     } 
     selected_data <- selected_data[selected_data$year > year & selected_data$year < (year + 10),]
     ggplot(data = selected_data) +
-      geom_polygon(aes(x = long, y = lat, group = group, fill = selected_data[,3])) +
+      geom_polygon(aes(x = long, y = lat, group = group, fill = Crime_rate)) +
       coord_quickmap() +
       scale_fill_gradient(limits = range(selected_data[3]),
                           low = "pink", high = "red")
@@ -529,6 +587,8 @@ my_server <- function(input, output) {
         names(selected_data)[3] <- "Population"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, color = county, na.rm = TRUE)) + 
           geom_smooth(method = 'lm', se=FALSE) +
+          ggtitle("       +Here is the plot about the correlation between crime counts
+          and population in every counties in the given time period:") +
           geom_point() 
       }
       else if (dataset == "New York") {
@@ -538,6 +598,8 @@ my_server <- function(input, output) {
         names(selected_data)[4] <- "Crime_Count"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, color = County, na.rm = TRUE)) + 
           geom_smooth(method = 'lm', se=FALSE) +
+          ggtitle("       +Here is the plot about the correlation between crime counts
+          and population in every counties in the given time period:") +
           geom_point() 
       }
       
@@ -553,6 +615,9 @@ my_server <- function(input, output) {
         names(selected_data)[4] <- "Crime_Count"
         names(selected_data)[3] <- "Population"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, na.rm = TRUE)) + 
+          ggtitle("         +Here is the plot about the correlation between crime counts
+          and population in the representative urbanized areas(king county) 
+          in this state in the last three decades:") +
           geom_smooth(method = 'lm', se=FALSE) +
           geom_point() 
       }
@@ -563,6 +628,9 @@ my_server <- function(input, output) {
         names(selected_data)[4] <- "Crime_Count"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, na.rm = TRUE)) + 
           geom_smooth(method = 'lm', se=FALSE) +
+          ggtitle("         +Here is the plot about the correlation between crime counts
+          and population in the representative urbanized areas(New York city) 
+          in this state in the last three decades:") +
           geom_point() 
       }
       
@@ -578,6 +646,9 @@ my_server <- function(input, output) {
         names(selected_data)[4] <- "Crime_Count"
         names(selected_data)[3] <- "Population"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, na.rm = TRUE)) + 
+          ggtitle("         +Here is the plot about the correlation between crime counts
+          and population in the representative country areas(Benton county) in 
+          this state in the last three decades:") +
           geom_point() 
       }
       else if (dataset == "New York") {
@@ -586,6 +657,9 @@ my_server <- function(input, output) {
           filter(County == "hamilton")
         names(selected_data)[4] <- "Crime_Count"
         ggplot(selected_data, aes(x=Population, y=Crime_Count, na.rm = TRUE)) + 
+          ggtitle("         +Here is the plot about the correlation between crime counts
+          and population in the representative country areas(Hamilton county) 
+          in this state in the last three decades:") +
           geom_point() 
       }
       
@@ -601,7 +675,9 @@ my_server <- function(input, output) {
     })
     
     output$intro_spe <- renderText({
-    "According to Claude Fischer's subcultural theory, the movements of human beings
+    "According to Claude Fischer's subcultural theory(check more information
+    at the link in Reference)
+    , the movements of human beings
     encourage social integration. People with same interests or backgrounds will be
     brought together which means this kind of demographic change could help
     creating the social network for criminals. However, crime rates change and 
@@ -646,6 +722,7 @@ my_server <- function(input, output) {
                   text <- "In 2010s, people started to moved back to the Rust Belt areas.
                 The population of those areas started to increase. The population of 
                 New York city was still increasing but in a slow rate."
+
     })
     
     output$crime <- renderText({
@@ -658,10 +735,107 @@ my_server <- function(input, output) {
           text <- "In this time period, most areas of Washington states continued
         its crime rate declines."
         else 
-          if(input$dataset == "New York")
+          if(input$dataset == "New York" & as.numeric(input$year) == 1990)
             text <- "The crime rate kept decreasing in most areas. However, the 
           situations in the Rust Belt areas were still not good."
+        else 
+          if(input$dataset == "New York" & as.numeric(input$year) == 2000)
+            text <- "The crime rate kept decreasing in most areas. However, the 
+          situations in the Rust Belt areas basically remained the same."
+        else 
+          if(input$dataset == "New York" & as.numeric(input$year) == 2010)
+            text <- "The crime rate in the Rust Belt areas decreased in this
+          time period. The crime rate in the some New York city areas 
+          and country areas started to increase."
     })
+    
+
+    output$number1 <- renderText({
+      if(input$dataset == "Washington")
+      paste('<p>Things needed to be catched up:<p>',
+      "The correlation rate
+      of crime count and population in Great Seattle Area is ", 
+      round(cor_wa, digits = 3), 
+      " which means when the population increase, the crime count decrease.",
+      "this number of country areas or small cities of Washington is ", 
+      round(cor_wa_c, digits = 3), ". We can find out that population increase 
+      has a bigger impact of decreasing crime in metropolitan urbanized 
+      areas than country areas or small cities. Meanwhile, the population
+      rate change for Washington state for last three decades is ", 
+      round(pop_wa_change, digits = 3),"%. This shows that the populations of 
+      most places in Washington increased in different rates.")
+      else if(input$dataset == "New York")
+        paste('<p>Things needed to be catched up:<p>'
+              ,"The population rate change of New York city for the last
+              three decades is ",round(pop_ny_change_u,digits = 3), "%. 
+              This number of the Rust 
+              Belt areas is ", round(pop_ny_change_r, digits = 3), "%. 
+              We can find out that
+              unlike somewhere else, the population living in the Rust Belt 
+              area(such as Buffalo) decreased for the last three decades. But
+              this trend has been stopped in recent years. According to the 
+              correlation plot ,we can find out that population increase 
+              has a bigger impact of decreasing crime in metropolitan urbanized 
+              areas than country areas or small cities.")
+    })
+
+      output$conclusion1 <- renderText({
+        if(input$dataset == "Both")
+        "From the history of Washington state and New York state, we can find out 
+        that there is a population redistribution pattern happened. From 1990s, 
+        in east coast, the past blue-collar manufacturing regions such as
+        West New York state and Pennsylvania started to lose 
+        its energy and people started to leave. This trend seems to be ended 
+        this years. In west coast, the population kept increasing for three 
+        decades. If we want to discuss the relationship between crime rate and
+        population change, we would find out that in urbanized areas, increasing
+        population means declining crime rate. However, in country areas or scattered
+        small cities, increased population means increased crime rate. Overall, it shows
+        that those first tier cities like Seattle and New York have decreasing
+        crime counts. In population-decreasing areas in east coast or non-urbanized 
+        areas in west coast, the crime rates remain the same or have rises."
+      })
+      
+      output$slogan1 <- renderText({
+        if(input$dataset == "Both")
+          paste('<p></p>', '<p></p>',
+            '<p><B>Conclusion:<B></p>',
+            '<p><B>Increasing population(in big cities) = less crime counts</B></p>',
+            '<p><B>Increasing population(in other areas) or 
+            decreasing population = more crime counts</B></p>',
+            '<p><B>Big cities in both coasts are getting safer<B></p>',
+            '<p><B>Scattered small cities and country areas used to be
+             dangerous, but now it is getting safer<B></p>',
+            '<p><B>The situation in the Rust Belt Area is getting better recently.<B></p>'
+            )
+        
+        
+      })
+      
+      output$conclusion2 <- renderText({
+        if(input$dataset == "Both")
+          "In fact, we can find out that economy situation is the real cause behind
+        the crime count change. When people moving into big city, it means the city is
+        getting energetic and flourishing. When the population desnity is getting bigger,
+        the cost to provide law enforcement is getting lower. People can enjoy better
+        social benefits if they live in densely populated regions which means they are
+        the society is safer. From the view of the whole country, people lead to move
+        to places with better economic potential. West coast becomes the target place
+        for those kind of people. US was getting through energy crisis and economic
+        recession before 1990s so that the crime rate was still unstable(relative high). With the 
+        development of mature social system and economic situation, the crime rate change
+        is getting lower(stable)."
+      })
+      output$slogan2 <- renderText({
+        if(input$dataset == "Both")
+          paste('<p><B>Dense population = less crime counts<B></p>',
+                '<p><B>stable economic situation = less crime counts</B></p>'
+                ) })
+        output$subtitle <- renderText({
+          if(input$dataset != "Both")
+            paste('<p><B>More Specific Explorations:<B></p>'
+            )
+      })
     
     
     

@@ -19,7 +19,7 @@ my_ui <- fluidPage(
                     "))
     ),
   
-  headerPanel(strong("Eastern and Western Criminal Behavior Comparsion")),
+  headerPanel(strong("Eastern and Western Criminal Behavior Comparison")),
   br(),
   h5(em("The crime rate of representative state in Eastern and Western States of 
      U.S.A in past three decades")),
@@ -74,19 +74,26 @@ changes in history along with criminal rates."),
                 tabPanel("Demographic", 
                          h3("Population Movement -- Crime Acts"),
                          textOutput("intro_main"), 
+                         br(),
                          textOutput("intro_spe"),
                          hr(),
                          h3("The Big Picture of What Happened"),
+                         htmlOutput("conclusion1"),
+                         htmlOutput("slogan1"),
+                         htmlOutput("conclusion2"),
+                         htmlOutput("slogan2"),
                          imageOutput("demo_map"), 
                          textOutput("population"),
                          br(),
                          imageOutput("demo_map1"),
                          textOutput("crime"),
                          hr(),
-                         h3("More Specific Explorations"),
+                         htmlOutput("subtitle"),
                          plotOutput("demo_cor"), 
                          plotOutput("demo_cor1"), 
-                         plotOutput("demo_cor2"))
+                         plotOutput("demo_cor2"),
+                         htmlOutput("number1")
+                         )
               )
           )
       ), 
@@ -115,7 +122,10 @@ changes in history along with criminal rates."),
              "WA crime rate by county"),
       br(),
       tags$a(href = "https://www.areavibes.com/new+york-ny/crime/",
-            "NY crime rate by county")
+            "NY crime rate by county"),
+      br(),
+      tags$a(href = "https://www-journals-uchicago-edu.offcampus.lib.washington.edu/doi/10.1086/230753",
+             "Claude Fischer's Subcultural Theory")
     )
   )
 )
