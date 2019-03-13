@@ -5,8 +5,8 @@ account: hanchen-win19-a8
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 788195
-bundleId: 1937788
+bundleId: 1937794
 url: https://hanchen-win19-a8.shinyapps.io/final_project_info_201/
-when: 1552512845.1995
+when: 1552512960.85083
 asMultiple: FALSE
 asStatic: FALSE

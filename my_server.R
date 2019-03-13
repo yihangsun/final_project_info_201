@@ -259,10 +259,10 @@ my_server <- function(input, output) {
           select(Year, mean_property_New_York)
       } else if(input$dataset == "Washington") {
         filter_pro_wa <- filtered_table %>%
-          select(Year, wa_ave_proporty)
+          select(Year, mean_property_Washington)
       } else if(input$dataset == "Both") {
         filter_pro_both <- filtered_table %>%
-          select(Year, wa_ave_proporty, mean_property_New_York)
+          select(Year, mean_property_Washington, mean_property_New_York)
       }
       if(input$year == "2010's") {
         filtered_table <- filtered_table %>%
